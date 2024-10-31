@@ -1,594 +1,148 @@
-﻿using System.Drawing;
+﻿using System.Collections.Immutable;
 
 namespace LightingManagementApp;
 
 public class Menu
 {
-    private const int MenuWidth = 30;
+    private const int Width = 30;
     
     #region Properties
-
+    
     /// <summary>
-    /// Gets or sets the menu window text.
+    /// Sets the title of the window displaying the menu.
     /// </summary>
-    public string? WindowTitle { set => Console.Title = value ?? ""; }
-
+    private string WindowTitle { get; set; } = "Lighting Management App";
+    
     /// <summary>
-    /// Gets or sets the menu header text.
+    /// Gets or sets the title of the menu.
     /// </summary>
-    public string? HeaderTitle { get; set; }
-
+    public string MenuTitle { get; set; }
+    
     /// <summary>
-    /// Gets or sets the message text to display within the menu.
+    /// Gets or sets the selection message text.
     /// </summary>
-    private string? Message { get; set; }
+    public string Message { get; set; }
 
     /// <summary>
-    /// Gets or sets the option that the user has chosen.
+    /// Gets or sets the options available in the menu.
+    /// </summary>
+    public string[] Options { get; set; }
+    
+    /// <summary>
+    /// Gets or sets the currently selected menu option.
     /// </summary>
     private int SelectedOption { get; set; }
-
+    
     /// <summary>
-    /// Gets or sets a dictionary keyed by a selections name
-    /// and containing the actions to perform upon selection.
+    /// Gets or sets whether the console cursor is displayed.
     /// </summary>
-    public Dictionary<string, Action>? Options { get; set; }
-
+    private bool ShowCursor { get; set; }
+    
     #endregion
-
+    
     #region Constructors
-
+    
     /// <summary>
-    /// Method used to construct a new instance of the menu class.
+    /// Constructor for a new instance of the Menu class.
     /// </summary>
     public Menu()
     {
-        Console.CursorVisible = false;
-    }
-
-    /// <summary>
-    /// Method used to construct a new instance of the menu class.
-    /// </summary>
-    /// <param name="windowTitle"></param>
-    /// <param name="headerTitle"></param>
-    /// <param name="message"></param>
-    public Menu(string? windowTitle, string? headerTitle, string? message)
-    {
-        WindowTitle = windowTitle;
-        HeaderTitle = headerTitle;
-        Message = message;
-        Console.CursorVisible = false;
+        // Set the properties of the menu.
+        MenuTitle = "<MENU TITLE PLACEHOLDER>";
+        Message = "<MENU MESSAGE PLACEHOLDER>";
+        Options = ["Exit", "<OPTION 1 PLACEHOLDER>", "<OPTION 2 PLACEHOLDER>"];
     }
 
     #endregion
-
+    
     #region Methods
-
+    
     /// <summary>
-    /// Method used to build the menu based on the provided actions.
+    /// Method used to build the menu.
     /// </summary>
-    public void Build()
+    public void Show()
     {
-        // Set the properties of the menu
-        SelectedOption = 0;
-
-        // Show the menu
-        do
-        {
-            // Clear the console
-            Console.Clear();
-
-            // Show the menu message
-            // Displays the header title
-            if (!string.IsNullOrEmpty(HeaderTitle))
-            {
-                string? message = HeaderTitle;
-                int width = MenuWidth > (message.Length - 1) ? (MenuWidth + 2) : (message.Length + 2);
-
-                message = " " + message + " ";
-                message = message.PadLeft(message.Length + (width - message.Length) / 2, '-');
-                message = message.PadRight(width, '-');
-                Console.WriteLine($"{message, MenuWidth}");
-            }
-
-            // Displays the message
-            if (!string.IsNullOrEmpty(Message))
-            {
-                string? message = Message;
-                int width = MenuWidth > (message.Length - 1) ? (MenuWidth + 2) : (message.Length + 2);
-
-                Console.WriteLine($"{message, MenuWidth}");
-                Console.WriteLine(new string('-', width));
-            }
-
-            // Iterate over the selectable options and print them to the console.
-            if (Options != null)
-                for (int i = 0; i < Options.Count; i++)
-                {
-                    // Highlights the selected option
-                    if (i == SelectedOption)
-                    {
-                        Console.BackgroundColor = ConsoleColor.White;
-                        Console.ForegroundColor = ConsoleColor.Black;
-                    }
-
-                    Console.WriteLine($"{Options.ElementAt(i),MenuWidth}");
-
-                    Console.ResetColor();
-                }
-        }
-        while (!HandleInput());
-
-        // Invokes the action corresponding to the selected option
-        string? key = Options?.Keys.ElementAt(SelectedOption);
-        if (key != null) Options?[key].Invoke();
+        // Clears the currently displayed console text.
+        Console.Clear();
+        
+        // Set the title of the console window.
+        Console.Title = WindowTitle;
+        
+        // Hide the console cursor.
+        Console.CursorVisible = ShowCursor;
+        
+        // Format and show the menu title in the console.
+        ShowMenuTitle();
+        
+        // Format and show the menu title in the console.
+        ShowMenuBody();
+    }
+    
+    /// <summary>
+    /// Method used to format the title of the console menu.
+    /// </summary>
+    /// <returns>The menu title to display.</returns>
+    private void ShowMenuTitle()
+    {
+        // Get the width of the console window.
+        int consoleWidth = Console.WindowWidth;
+        
+        // Get the width of the menu title.
+        int titleWidth = MenuTitle.Length;
+        
+        // Determine how many spaces on each side is needed to center the menu title.
+        int padValue = (consoleWidth - titleWidth) / 2;
+        
+        // Add the padValue to each side of the menu title.
+        string formattedString = MenuTitle.PadLeft(padValue).PadRight(consoleWidth);
+        
+        // Set the menu title property to the formatted string.
+        MenuTitle = formattedString;
+        
+        // Show a separation between the title and the menu body.
+        Console.WriteLine(new string('=', Console.WindowWidth));
+        
+        // Show the menu title.
+        Console.WriteLine($"{MenuTitle}");
+        
+        // Show a separation between the title and the menu body.
+        Console.WriteLine(new string('=', Console.WindowWidth));
     }
 
-    /// <summary>
-    /// Method used to process the user's input.
-    /// </summary>
-    /// <returns></returns>
-    private bool HandleInput()
+    private void ShowMenuBody()
     {
-        int endIndex = Options?.Count - 1 ?? 0;
-        int option = SelectedOption;
+        // Show the selection message.
+        Console.WriteLine($"{Message}:");
 
-        // Changes the selected option based on the key pressed.
-        switch (Console.ReadKey(true).Key)
+        // Iterate over the selectable options and print them to the console.
+        for (int i = 0; i < Options.Length; i++)
         {
-            case ConsoleKey.Enter:
-                Reset();
-                return true;
-            case ConsoleKey.UpArrow when option > 0:
-                // option--;
-                break;
-            case ConsoleKey.UpArrow when option == 0:
-                // option = endIndex;
-                break;
-            case ConsoleKey.DownArrow when option < endIndex:
-                // option++;
-                break;
-            case ConsoleKey.DownArrow when option == endIndex:
-                // option = 0;
-                break;
-            default:
-                HandleInput();
-                break;
-        }
-        return false;
-    }
-
-    /// <summary>
-    /// Method used to Reset the Menu UI
-    /// </summary>
-    private void Reset()
-    {
-        WindowTitle = null;
-        HeaderTitle = null;
-        Message = null;
-    }
-
-    /// <summary>
-    /// Method used to exit the application.
-    /// </summary>
-    public static void Exit() => Environment.Exit(0);
-
-    #endregion
-
-    #region Menu Screens
-
-    public static void ShowConfigurationMenu(Menu menu)
-    {
-        // Set the properties for the menu.
-        menu.HeaderTitle = "Configuration Menu";
-
-        // Create a dictionary of the selectable menu options.
-        menu.Options = new Dictionary<string, Action>()
-        {
-            { "Serial Peripheral Interface (SPI) Configuration", menu.ShowSpiConfigurationMenu },
-            { "LED Type Configuration", menu.ShowLEDTypeSelectionMenu },
-            { "White Level Configuration", menu.ShowWhiteLevelMenu },
-            { "~Back", DrawMainMenu }
-        };
-
-        // Build and show the menu.
-        menu.Build();
-    }
-
-    /// <summary>
-    /// Method used to show the SPI Configuration menu.
-    /// </summary>
-    private void ShowSpiConfigurationMenu()
-    {
-        // Set the properties for the menu.
-        HeaderTitle = "Serial Peripheral Interface (SPI) Configuration Menu";
-
-        // Create a dictionary of the selectable menu options.
-
-        // Build and show the menu.
-        Build();
-    }
-
-    /// <summary>
-    /// Method used to confirm the users' selection.
-    /// </summary>
-    private void ShowConfirmMenu()
-    {
-        // Set the properties for the menu.
-        WindowTitle = "Confirm";
-        Message = "Are you sure?";
-
-        // Create a dictionary of the selectable menu options.
-
-        // Build and show the menu.
-        Build();
-        switch (SelectedOption)
-        {
-            case 0:
-                ShowMainMenu();
-                break;
-            case 1:
-                ShowMainMenu();
-                break;
+            // Write the index of the option followed by the option text.
+            // Example: 0. Exit
+            Console.WriteLine($"{i}. {Options[i]}");
+            
+            // If this is the currently selected option, highlight it.
+            if (i == SelectedOption)
+            {
+                DisplayAsSelected();
+            }
+            
+            // Reset the console color.
+            Console.ResetColor();
         }
     }
-
+    
     /// <summary>
-    /// Method used to show the LED type selection menu.
+    /// Method used to display the current console text as selected.
     /// </summary>
-    private void ShowLEDTypeSelectionMenu()
+    private static void DisplayAsSelected()
     {
-        // Set the properties for the menu.
-        HeaderTitle = "LED Type Selection Menu";
-
-        // Create a dictionary of the selectable menu options.
-
-        // Build and show the menu.
-        Build();
+        // Set the console background color to White.
+        Console.BackgroundColor = ConsoleColor.White;
+        
+        // Set the console foreground color to Black.
+        Console.ForegroundColor = ConsoleColor.Black;
     }
-
-    /// <summary>
-    /// Method used to show the White Level Menu.
-    /// </summary>
-    private void ShowWhiteLevelMenu()
-    {
-        // Set the properties for the menu.
-        HeaderTitle = "White Level Selection Menu";
-
-        // Create a dictionary of the selectable menu options.
-
-        // Build and show the menu.
-        Build();
-    }
-
-    private void DrawMenu()
-        {
-            Console.Clear();
-            switch (MenuId)
-            {
-                case MenuId.Root:
-                    isActive = DrawMainMenu();
-                    break;
-
-                case MenuId.WhiteLevel:
-                    DrawWhiteLevelMenu();
-                    break;
-
-                case MenuId.TheatreChase:
-                    DrawTheatreChaseMenu();
-                    break;
-
-                case MenuId.Wipe:
-                    DrawWipeMenu();
-                    break;
-
-                case MenuId.Flash:
-                    DrawFlashMenu();
-                    break;
-
-                case MenuId.Special:
-                    DrawSpecialMenu();
-                    break;
-            }
-        }
-
-    private void DrawSpecialMenu()
-        {
-            Console.WriteLine("1. Knight Rider");
-            Console.WriteLine("0: Back");
-            Console.Write("Selection: ");
-
-            string? choice = Console.ReadLine();
-            switch (choice)
-            {
-                case "0":
-                    menuId = MenuId.Root;
-                    break;
-
-                case "1":
-                    StartKnightRider();
-                    break;
-
-                default:
-                    Console.WriteLine("Unknown Selection. Any key to continue.");
-                    Console.ReadKey();
-                    break;
-            }
-        }
-
-    private void DrawWipeMenu()
-        {
-            Console.WriteLine("1. Wipe black");
-            Console.WriteLine("2. Wipe red");
-            Console.WriteLine("3. Wipe green");
-            Console.WriteLine("4. Wipe blue");
-            Console.WriteLine("5. Wipe yellow");
-            Console.WriteLine("6. Wipe turquoise");
-            Console.WriteLine("7. Wipe purple");
-            Console.WriteLine("8. Wipe cold white");
-            if (module.SupportsSeparateWhite)
-            {
-                Console.WriteLine("9: Separate white");
-            }
-
-            Console.WriteLine("0: Back");
-            Console.Write("Selection: ");
-
-            string? choice = Console.ReadLine();
-            switch (choice)
-            {
-                case "0":
-                    menuId = MenuId.Root;
-                    break;
-
-                case "1":
-                    module.ColorWipe(module.FilterColor(Color.Black));
-                    break;
-
-                case "2":
-                    module.ColorWipe(module.FilterColor(Color.Red));
-                    break;
-
-                case "3":
-                    module.ColorWipe(module.FilterColor(Color.Green));
-                    break;
-
-                case "4":
-                    module.ColorWipe(module.FilterColor(Color.Blue));
-                    break;
-
-                case "5":
-                    module.ColorWipe(module.FilterColor(Color.Yellow));
-                    break;
-
-                case "6":
-                    module.ColorWipe(module.FilterColor(Color.Turquoise));
-                    break;
-
-                case "7":
-                    module.ColorWipe(module.FilterColor(Color.Purple));
-                    break;
-
-                case "8":
-                    module.ColorWipe(module.FilterColor(Color.White));
-                    break;
-
-                case "9":
-                    module.ColorWipe(Color.FromArgb(255, 0, 0, 0));
-                    break;
-
-                default:
-                    Console.WriteLine("Unknown Selection. Any key to continue.");
-                    Console.ReadKey();
-                    break;
-            }
-        }
-
-    private void DrawTheatreChaseMenu()
-        {
-            Console.WriteLine("1: All LED off");
-            Console.WriteLine("2: Chase in red");
-            Console.WriteLine("3: Chase in green");
-            Console.WriteLine("4: Chase in blue");
-            Console.WriteLine("5: Christmas Chase");
-
-            if (module.SupportsSeparateWhite)
-            {
-                Console.WriteLine("6: White Chase");
-            }
-
-            Console.WriteLine("0: Back");
-            Console.Write("Selection: ");
-            string? choice = Console.ReadLine();
-            switch (choice)
-            {
-                case "0":
-                    menuId = MenuId.Root;
-                    break;
-
-                case "1":
-                    module.SwitchOffLEDs();
-                    break;
-
-                case "2":
-                    StartChase(module.FilterColor(Color.Red), Color.FromArgb(0, 0, 0, 0));
-                    break;
-
-                case "3":
-                    StartChase(module.FilterColor(Color.Green), Color.FromArgb(0, 0, 0, 0));
-                    break;
-
-                case "4":
-                    StartChase(module.FilterColor(Color.Blue), Color.FromArgb(0, 0, 0, 0));
-                    break;
-
-                case "5":
-                    StartChase(module.FilterColor(Color.Red), module.FilterColor(Color.Green));
-                    break;
-
-                case "6":
-                    StartChase(Color.FromArgb(255, 0, 0, 0), Color.FromArgb(0, 0, 0, 0));
-                    break;
-
-                default:
-                    Console.WriteLine("Unknown Selection. Any key to continue.");
-                    Console.ReadKey();
-                    break;
-            }
-        }
-
-    private bool DrawMainMenu()
-        {
-            Console.WriteLine("0: Back");
-            Console.WriteLine("1: All LED off");
-            Console.WriteLine("2: All LED to white (percentage)");
-            Console.WriteLine("3: Rainbow");
-            Console.WriteLine("4: TheatreChase");
-            Console.WriteLine("5: Wipe");
-            Console.WriteLine("6: Flash");
-            Console.WriteLine("7: Special");
-
-            Console.Write("Selection: ");
-            string? choice = Console.ReadLine();
-            bool keepActive = true;
-            switch (choice)
-            {
-                case "0":
-                    keepActive = false;
-                    break;
-
-                case "1":
-                    module.SwitchOffLEDs();
-                    keepActive = true;
-                    break;
-
-                case "2":
-                    keepActive = true;
-                    menuId = MenuId.WhiteLevel;
-                    break;
-
-                case "3":
-                    StartRainbow();
-                    break;
-
-                case "4":
-                    menuId = MenuId.TheatreChase;
-                    break;
-
-                case "5":
-                    menuId = MenuId.Wipe;
-                    break;
-
-                case "6":
-                    menuId = MenuId.Flash;
-                    break;
-
-                case "7":
-                    menuId = MenuId.Special;
-                    break;
-
-                default:
-                    Console.WriteLine("Unknown Selection. Any key to continue.");
-                    Console.ReadKey();
-                    break;
-            }
-
-            return keepActive;
-        }
-
-    private void DrawWhiteLevelMenu()
-        {
-            Console.WriteLine($"1: Change percentage (currently: {colorPercentage * 100}%)");
-            Console.WriteLine("2: LEDs white (RGB)");
-            if (module.SupportsSeparateWhite)
-            {
-                Console.WriteLine("3: Separate White");
-            }
-
-            Console.WriteLine("0: Back");
-            Console.Write("Selection: ");
-            string? choice = Console.ReadLine();
-            switch (choice)
-            {
-                case "0":
-                    menuId = MenuId.Root;
-                    break;
-
-                case "1":
-                    RequestPercentage();
-                    break;
-
-                case "2":
-                    module.SetWhiteValue(colorPercentage);
-                    break;
-
-                case "3":
-                    module.SetWhiteValue(colorPercentage, true);
-                    break;
-
-                default:
-                    Console.WriteLine("Unknown Selection. Any key to continue.");
-                    Console.ReadKey();
-                    break;
-            }
-        }
-
-    private void DrawFlashMenu()
-        {
-            Console.WriteLine("0: Back");
-            Console.WriteLine("1. Flash Red");
-            Console.WriteLine("2. Flash Green");
-            Console.WriteLine("3. Flash Blue");
-            Console.WriteLine("4. Flash Yellow");
-            Console.WriteLine("5. Flash Turquoise");
-            Console.WriteLine("6. Flash Purple");
-            Console.WriteLine("7. Flash White");
-            Console.Write("Selection: ");
-            string? choice = Console.ReadLine();
-            Console.WriteLine("How many times should the LED flash?");
-            int numFlashes = Convert.ToInt32(Console.ReadLine());
-            Console.WriteLine("Enter a value for the flash delay in milliseconds (default 50):");
-            int flashDelay = Convert.ToInt32(Console.ReadLine());
-            switch (choice)
-            {
-                case "0":
-                    menuId = MenuId.Root;
-                    break;
-
-                case "1":
-                    StartFlash(module.FilterColor(Color.Red), numFlashes, flashDelay);
-                    break;
-
-                case "2":
-                    StartFlash(module.FilterColor(Color.Green), numFlashes, flashDelay);
-                    break;
-
-                case "3":
-                    StartFlash(module.FilterColor(Color.Blue), numFlashes, flashDelay);
-                    break;
-
-                case "4":
-                    StartFlash(module.FilterColor(Color.Yellow), numFlashes, flashDelay);
-                    break;
-
-                case "5":
-                    StartFlash(module.FilterColor(Color.Turquoise), numFlashes, flashDelay);
-                    break;
-
-                case "6":
-                    StartFlash(module.FilterColor(Color.Purple), numFlashes, flashDelay);
-                    break;
-
-                case "7":
-                    StartFlash(module.FilterColor(Color.White), numFlashes, flashDelay);
-                    break;
-
-                default:
-                    Console.WriteLine("Unknown Selection. Any key to continue.");
-                    Console.ReadKey();
-                    break;
-            }
-        }
-
+    
     #endregion
 }

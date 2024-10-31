@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = LightingManagementApp
-build_property.ProjectDir = C:\Users\c.spencer\RiderProjects\LightingManagementApp\LightingManagementApp\
+build_property.ProjectDir = C:\Users\c.spencer\RiderProjects\LightingManagerApp\LightingManagementApp\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

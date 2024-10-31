@@ -5,7 +5,8 @@ following [Tutorial: Using OpenSSL to create test certificates](https://docs.mic
 document.
 
 > NOTE: This example was created using [Cygwin64 for Windows](https://cygwin.com/install.html). Cygwin is an open source
-> tool collection that allows Unix or Linux applications to be run on Windows from within a Linux-like interface. CygWin64
+> tool collection that allows Unix or Linux applications to be run on Windows from within a Linux-like interface.
+> CygWin64
 > is bundled with OpenSSL. If you are using Linux, you probably already have OpenSSL installed.
 
 Although you can purchase X.509 certificates from a trusted certification authority, creating your own test certificate

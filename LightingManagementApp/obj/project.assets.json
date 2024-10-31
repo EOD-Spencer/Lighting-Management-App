@@ -2235,11 +2235,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\c.spencer\\RiderProjects\\LightingManagementApp\\LightingManagementApp\\LightingManagementApp.csproj",
+      "projectUniqueName": "C:\\Users\\c.spencer\\RiderProjects\\LightingManagerApp\\LightingManagementApp\\LightingManagementApp.csproj",
       "projectName": "LightingManagementApp",
-      "projectPath": "C:\\Users\\c.spencer\\RiderProjects\\LightingManagementApp\\LightingManagementApp\\LightingManagementApp.csproj",
+      "projectPath": "C:\\Users\\c.spencer\\RiderProjects\\LightingManagerApp\\LightingManagementApp\\LightingManagementApp.csproj",
       "packagesPath": "C:\\Users\\c.spencer\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\c.spencer\\RiderProjects\\LightingManagementApp\\LightingManagementApp\\obj\\",
+      "outputPath": "C:\\Users\\c.spencer\\RiderProjects\\LightingManagerApp\\LightingManagementApp\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

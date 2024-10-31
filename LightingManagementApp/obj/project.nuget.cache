@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "1rkNGKmk2C6Ul/dGjv0llR/flPoVTtNWQ4MV6zhJY4Odia1+80ljhryf7+ms5RtesfkaeyhhPiTQbPEb3DzW7Q==",
+  "dgSpecHash": "UmKlujTpkUbreBhb08jlj6s8aG9XWTXgRky3l5Xjd8oRGYFfktEGq0B2/amQBS6X0y2lzAj/PkGjLIoh6A86BA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\c.spencer\\RiderProjects\\LightingManagementApp\\LightingManagementApp\\LightingManagementApp.csproj",
+  "projectFilePath": "C:\\Users\\c.spencer\\RiderProjects\\LightingManagerApp\\LightingManagementApp\\LightingManagementApp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\c.spencer\\.nuget\\packages\\azure.core\\1.36.0\\azure.core.1.36.0.nupkg.sha512",
     "C:\\Users\\c.spencer\\.nuget\\packages\\azure.storage.blobs\\12.19.1\\azure.storage.blobs.12.19.1.nupkg.sha512",
