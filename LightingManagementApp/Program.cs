@@ -6,15 +6,25 @@ namespace LightingManagementApp;
 
 public static class Program
 {
+    #region Properties
+
+    /// <summary>
+    /// Gets or sets the ID of the currently displayed menu.
+    /// </summary>
+    private MenuId CurrentMenu { get; set; } = MenuId.Root;
+
+    /// <summary>
+    /// Gets or sets whether the program is active.
+    /// </summary>
+    private bool IsActive { get; set; } = true;
+
+    #endregion
+
+    /// <summary>
+    /// Entry point for the Lighting Management Application.
+    /// </summary>
     public static void Main()
-    {
-        // Initial Values
-        int ledCount = -1; // Number of LEDs (set to -1 to force user input)
-        MenuId menuId = MenuId.Root; // Set the menu id to the root menu
-        bool isActive = true; // Set the application to active
-        float colorPercentage = 1.0f; // Set the color percentage to 100%
-        
-        
+    {        
         // Setup Serial Peripheral Interface (SPI) to communicate with the LED strip
         SpiConnectionSettings defaultSettings = new(0, 0)
         {
@@ -25,6 +35,8 @@ public static class Program
 
         // Create the SPI device
         SpiDevice spi = SpiDevice.Create(defaultSettings);
+
+        int ledCount = -1; // Number of LEDs (set to -1 to force user input)
 
         // Create the LED strip object
         Ws28xx? ledStrip = null;
@@ -77,7 +89,7 @@ public static class Program
         // Set Initial state of the LEDs to off
         ledStrip.Image.Clear(Color.Black);
         
-        while (isActive)
+        while (IsActive)
         {
             DrawMenu();
         }
@@ -87,7 +99,7 @@ public static class Program
         void DrawMenu()
         {
             Console.Clear();
-            switch (menuId)
+            switch (MenuId)
             {
                 case MenuId.Root:
                     isActive = DrawMainMenu();
@@ -125,7 +137,7 @@ public static class Program
             switch (choice)
             {
                 case "0":
-                    menuId = MenuId.Root;
+                    MenuId = MenuId.Root;
                     break;
 
                 case "1":
@@ -162,7 +174,7 @@ public static class Program
             switch (choice)
             {
                 case "0":
-                    menuId = MenuId.Root;
+                    MenuId = MenuId.Root;
                     break;
 
                 case "1":
@@ -227,7 +239,7 @@ public static class Program
             switch (choice)
             {
                 case "0":
-                    menuId = MenuId.Root;
+                    MenuId = MenuId.Root;
                     break;
 
                 case "1":
@@ -288,7 +300,7 @@ public static class Program
 
                 case "2":
                     keepActive = true;
-                    menuId = MenuId.WhiteLevel;
+                    MenuId = MenuId.WhiteLevel;
                     break;
 
                 case "3":
@@ -296,19 +308,19 @@ public static class Program
                     break;
 
                 case "4":
-                    menuId = MenuId.TheaterChase;
+                    MenuId = MenuId.TheaterChase;
                     break;
 
                 case "5":
-                    menuId = MenuId.Wipe;
+                    MenuId = MenuId.Wipe;
                     break;
 
                 case "6":
-                    menuId = MenuId.Flash;
+                    MenuId = MenuId.Flash;
                     break;
                 
                 case "7":
-                    menuId = MenuId.Special;
+                    MenuId = MenuId.Special;
                     break;
 
                 default:
@@ -336,7 +348,7 @@ public static class Program
             switch (choice)
             {
                 case "0":
-                    menuId = MenuId.Root;
+                    MenuId = MenuId.Root;
                     break;
 
                 case "1":
@@ -379,7 +391,7 @@ public static class Program
             switch (choice)
             {
                 case "0":
-                    menuId = MenuId.Root;
+                    MenuId = MenuId.Root;
                     break;
 
                 case "1":
